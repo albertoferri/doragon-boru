@@ -4,6 +4,7 @@ import CharacterCard from '../components/CharacterCard'
 import PlanetCard from '../components/PlanetCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faGlobe, faStar } from '@fortawesome/free-solid-svg-icons'
+import stellaGrande from '../assets/images/stella-grande.png'
 
 export default function Favorites() {
   const { favCharacters, favPlanets } = useFavorites()
@@ -16,7 +17,7 @@ export default function Favorites() {
         className="mb-8"
       >
         <h1 className="flex items-center gap-2 text-4xl font-black text-white mb-2">
-          <img className="w-10 h-10" src="/src/assets/images/stella-grande.png" alt="" />
+          <img className="w-10 h-10" src={stellaGrande} alt="" />
           Favorites
         </h1>
         <p className="text-neutral-400">Your saved characters and planets</p>

@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { useFavorites } from '../context/FavoritesContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSkull, faGlobe } from '@fortawesome/free-solid-svg-icons'
+import stellaPiena from '../assets/images/stella-piena.png'
+import stellaVuota from '../assets/images/stella-vuota.png'
 
 // Deterministic starfield based on planet id
 function Stars({ seed }) {
@@ -130,7 +132,7 @@ export default function PlanetCard({ planet }) {
         style={{ background: 'transparent', border: 'transparent' }}
       >
         <img
-          src={isFav ? "/src/assets/images/stella-piena.png" : "/src/assets/images/stella-vuota.png"}
+          src={isFav ? stellaPiena : stellaVuota}
           alt={isFav ? "Favorite" : "Not Favorite"}
           className="w-6 h-6"
         />

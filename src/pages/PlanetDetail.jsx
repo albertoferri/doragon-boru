@@ -8,6 +8,8 @@ import CharacterCard from '../components/CharacterCard'
 import { useFavorites } from '../context/FavoritesContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSkull, faCircleCheck, faGhost } from '@fortawesome/free-solid-svg-icons'
+import stellaPiena from '../assets/images/stella-piena.png'
+import stellaVuota from '../assets/images/stella-vuota.png'
 
 export default function PlanetDetail() {
   const { id } = useParams()
@@ -63,7 +65,7 @@ export default function PlanetDetail() {
               className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all"
             >
               <img
-                src={isFav ? "/src/assets/images/stella-piena.png" : "/src/assets/images/stella-vuota.png"}
+                src={isFav ? stellaPiena : stellaVuota}
                 alt={isFav ? "Favorite" : "Not Favorite"}
                 className="w-7 h-7"
               />

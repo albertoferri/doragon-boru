@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faGlobe, faFire, faMeteor, faBrain, faStar } from '@fortawesome/free-solid-svg-icons'
+import dbboru from '../assets/images/dbboru.png'
 
 const links = [
   { to: '/characters',    label: 'Characters',  icon: faUser },
@@ -19,7 +20,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-neutral-900/95 backdrop-blur-sm border-b border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img className="invert w-10" src="/src/assets/images/dbboru.png" alt="Doragon Boru" />
+          <img className="invert w-10" src={dbboru} alt="Doragon Boru" />
           <span className="font-bold text-white text-lg tracking-tight hidden sm:block">
             Doragon Boru
           </span>

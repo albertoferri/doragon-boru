@@ -5,6 +5,8 @@ import { useFavorites } from '../context/FavoritesContext'
 import { getRaceBadgeStyle } from '../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt } from '@fortawesome/free-solid-svg-icons'
+import stellaPiena from '../assets/images/stella-piena.png'
+import stellaVuota from '../assets/images/stella-vuota.png'
 
 export default function CharacterCard({ character }) {
   const { toggleFavCharacter, isFavCharacter } = useFavorites()
@@ -123,11 +125,7 @@ export default function CharacterCard({ character }) {
           border: 'transparent',
         }}
       >
-        <img src={
-          isFav
-            ? "/src/assets/images/stella-piena.png"
-            : "/src/assets/images/stella-vuota.png"
-          }
+        <img src={isFav ? stellaPiena : stellaVuota}
           alt={isFav ? "Favorite" : "Not Favorite"}
           className="w-6 h-6"
         />
