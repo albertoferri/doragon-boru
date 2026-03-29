@@ -8,6 +8,7 @@ import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGlobe, faSkull, faCircleCheck, faMeteor } from '@fortawesome/free-solid-svg-icons'
+import TypewriterText from '../components/TypewriterText'
 
 export default function Planets() {
   const [search, setSearch] = useState('')
@@ -42,7 +43,8 @@ export default function Planets() {
         className="mb-8"
       >
         <h1 className="text-4xl font-black text-white mb-2 flex items-center gap-3">
-          <FontAwesomeIcon icon={faGlobe} className="text-purple-400" /> Planets
+          <FontAwesomeIcon icon={faGlobe} className="text-purple-400" />
+          <TypewriterText text="Planets" speed={55} />
         </h1>
         <p className="text-neutral-400">Discover worlds across the Dragon Ball universe</p>
       </motion.div>

@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import TypewriterText from '../components/TypewriterText'
 import { motion } from 'framer-motion'
 import { getCharacterById } from '../services/api'
 import useFetch from '../hooks/useFetch'
@@ -14,6 +15,7 @@ import stellaVuota from '../assets/images/stella-vuota.png'
 
 export default function CharacterDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { data: character, loading, error, refetch } = useFetch(() => getCharacterById(id), [id])
   const { toggleFavCharacter, isFavCharacter } = useFavorites()
   const description = useTranslatedText(character?.description)
@@ -27,9 +29,9 @@ export default function CharacterDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <Link to="/" className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
-        ← Back to Characters
-      </Link>
+      <button onClick={() => navigate(-1)} className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
+        ← Back
+      </button>
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <motion.div
@@ -55,7 +57,9 @@ export default function CharacterDetail() {
         >
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-black text-white">{character.name}</h1>
+              <h1 className="text-3xl font-black text-white">
+                <TypewriterText text={character.name} speed={45} />
+              </h1>
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className={`text-xs px-2 py-0.5 rounded-full border ${getRaceBadgeStyle(character.race)}`}>
                   {character.race || 'Unknown'}
@@ -108,7 +112,9 @@ export default function CharacterDetail() {
           {character.description && (
             <div className="card-base p-4">
               <h3 className="text-neutral-400 text-xs uppercase tracking-wider mb-2">Description</h3>
-              <p className="text-neutral-200 text-sm leading-relaxed">{description}</p>
+              <p className="text-neutral-200 text-sm leading-relaxed">
+                <TypewriterText text={description} speed={8} />
+              </p>
             </div>
           )}
         </motion.div>

@@ -7,12 +7,18 @@ import 'swiper/css'
 import 'swiper/css/effect-cards'
 import { getAllCharacters } from '../services/api'
 
+import TypewriterText from '../components/TypewriterText'
 import wallImg    from '../assets/images/wall1.jpg'
 import imgChars   from '../assets/images/gokuchar.jpg'
 import imgPlanets from '../assets/images/kaiplanet.jpg'
 import imgBattle  from '../assets/images/vegetabat.jpg'
 import imgPlanetB from '../assets/images/planetibatt.jpg'
 import imgQuiz    from '../assets/images/quiz.jpg'
+
+const TITLE_SEGS = [
+  { text: 'Doragon ', className: '' },
+  { text: 'Boru', className: 'text-blue-400' },
+]
 
 const NAV_ITEMS = [
   { to: '/characters',    label: 'Personaggi',        phrase: 'Saiyan pronti alla battaglia!',  color: '#3b82f6', img: imgChars   },
@@ -73,14 +79,41 @@ function OrbitalLink({ char, item, angle, radius }) {
           {item.label}
         </motion.div>
         <motion.div
-          animate={{ opacity: hovered ? 1 : 0, y: hovered ? -4 : 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ x: '-50%', opacity: 0, scale: 0.88, y: 6 }}
+          animate={{ x: '-50%', opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.88, y: hovered ? 0 : 6 }}
+          transition={{ duration: 0.15 }}
           className="absolute pointer-events-none"
-          style={{ bottom: '120%', right: '-40%', transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}
+          style={{ bottom: 'calc(100% + 10px)', left: '50%', whiteSpace: 'nowrap', zIndex: 50 }}
         >
-          <div className="text-black text-xs px-3 py-2 rounded-xl shadow-xl relative font-semibold" style={{ background: 'white' }}>
+          <div style={{
+            background: '#fff',
+            border: '2.5px solid #111',
+            borderRadius: '10px',
+            padding: '5px 11px',
+            position: 'relative',
+            boxShadow: '3px 3px 0px #111',
+            fontWeight: 900,
+            fontSize: '11px',
+            color: '#111',
+            letterSpacing: '0.01em',
+          }}>
             {item.phrase}
-            <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45" style={{ bottom: -5 }} />
+            {/* Tail outer (black border) */}
+            <div style={{
+              position: 'absolute', bottom: -11, left: '50%', transform: 'translateX(-50%)',
+              width: 0, height: 0,
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderTop: '10px solid #111',
+            }} />
+            {/* Tail inner (white fill) */}
+            <div style={{
+              position: 'absolute', bottom: -7, left: '50%', transform: 'translateX(-50%)',
+              width: 0, height: 0,
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderTop: '8px solid #fff',
+            }} />
           </div>
         </motion.div>
       </Link>
@@ -130,9 +163,11 @@ export default function Landing() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-10 px-8"
           >
             <h1 className="text-4xl xl:text-5xl font-black text-white mb-2 leading-tight">
-              Doragon <span className="text-blue-400">Boru</span>
+              <TypewriterText segments={TITLE_SEGS} speed={60} />
             </h1>
-            <p className="text-neutral-400 text-sm xl:text-base">Explore fighters, planets and epic battles</p>
+            <p className="text-neutral-400 text-sm xl:text-base">
+              <TypewriterText text="Explore fighters, planets and epic battles" speed={28} delay={780} />
+            </p>
           </motion.div>
           {chars.slice(0, NAV_ITEMS.length).map((char, i) => {
             const total = NAV_ITEMS.length

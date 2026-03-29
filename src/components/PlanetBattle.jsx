@@ -254,7 +254,7 @@ export default function PlanetBattle({ planet1, planet2, onReset }) {
           whileTap={{ scale: 0.97 }}
           onClick={calculate}
           disabled={calculating}
-          className="w-full py-4 rounded-xl font-black text-lg text-white flex items-center justify-center gap-2"
+          className="mx-auto px-14 py-3 rounded-xl font-black text-lg text-white flex items-center gap-2"
           style={{
             background: calculating
               ? 'linear-gradient(90deg, #4c1d95, #7f1d1d)'
@@ -315,7 +315,7 @@ export default function PlanetBattle({ planet1, planet2, onReset }) {
               )}
             </div>
 
-            <button onClick={onReset} className="btn-secondary w-full flex items-center justify-center gap-2">
+            <button onClick={onReset} className="btn-secondary mx-auto flex items-center gap-2 px-10">
               <FontAwesomeIcon icon={faRotateLeft} /> Nuova Battaglia tra Pianeti
             </button>
           </motion.div>

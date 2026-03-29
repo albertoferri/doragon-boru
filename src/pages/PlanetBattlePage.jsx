@@ -6,6 +6,7 @@ import DragonBallOrb from '../components/DragonBallOrb'
 import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import TypewriterText from '../components/TypewriterText'
 import { faGlobe, faFire, faSkull, faCircleCheck, faXmark, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 
 function Starfield({ seed = 1 }) {
@@ -168,7 +169,7 @@ export default function PlanetBattlePage() {
           style={{ color: '#c084fc', textShadow: '0 0 24px rgba(192,132,252,0.7), 0 0 48px rgba(192,132,252,0.3)' }}
         >
           <FontAwesomeIcon icon={faGlobe} className="mr-2 text-purple-400" />
-          Planet Battle
+          <TypewriterText text="Planet Battle" speed={55} />
           <FontAwesomeIcon icon={faFire} className="ml-2 text-red-400" />
         </h1>
       </div>
@@ -221,7 +222,7 @@ export default function PlanetBattlePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 onClick={() => setBattleStarted(true)}
-                className="w-full py-3 rounded-xl font-black text-lg uppercase tracking-widest flex items-center justify-center gap-3 text-white"
+                className="mx-auto px-12 py-3 rounded-xl font-black text-lg uppercase tracking-widest flex items-center gap-3 text-white"
                 style={{
                   background: 'linear-gradient(90deg, #6d00ff 0%, #cc0000 100%)',
                   boxShadow: '0 0 30px rgba(140,0,255,0.5)',

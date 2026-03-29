@@ -96,6 +96,7 @@ body {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
 }
 
+
 .btn-primary {
   background-color: #2563eb;
   color: #fff;
@@ -111,16 +112,22 @@ body {
 }
 
 .btn-secondary {
-  background-color: #404040;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.55rem 1.4rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 .btn-secondary:hover {
-  background-color: #525252;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.07);
 }
 
 .btn-danger {

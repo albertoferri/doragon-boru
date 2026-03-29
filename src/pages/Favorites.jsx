@@ -4,6 +4,7 @@ import CharacterCard from '../components/CharacterCard'
 import PlanetCard from '../components/PlanetCard'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faGlobe, faStar } from '@fortawesome/free-solid-svg-icons'
+import TypewriterText from '../components/TypewriterText'
 import stellaGrande from '../assets/images/stella-grande.png'
 
 export default function Favorites() {
@@ -18,7 +19,7 @@ export default function Favorites() {
       >
         <h1 className="flex items-center gap-2 text-4xl font-black text-white mb-2">
           <img className="w-10 h-10" src={stellaGrande} alt="" />
-          Favorites
+          <TypewriterText text="Favorites" speed={55} />
         </h1>
         <p className="text-neutral-400">Your saved characters and planets</p>
       </motion.div>

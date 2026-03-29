@@ -6,6 +6,7 @@ import DragonBallOrb from '../components/DragonBallOrb'
 import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import TypewriterText from '../components/TypewriterText'
 import { faHandFist, faXmark, faUser, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { getRaceBadgeStyle } from '../utils/helpers'
 
@@ -160,7 +161,7 @@ export default function BattleArenaPage() {
           style={{ color: '#60a5fa', textShadow: '0 0 24px rgba(96,165,250,0.7), 0 0 48px rgba(96,165,250,0.3)' }}
         >
           <FontAwesomeIcon icon={faHandFist} className="mr-2" />
-          Battle Arena
+          <TypewriterText text="Battle Arena" speed={55} />
         </h1>
       </div>
 
@@ -212,7 +213,7 @@ export default function BattleArenaPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 onClick={() => setBattleStarted(true)}
-                className="w-full py-3 rounded-xl font-black text-lg uppercase tracking-widest flex items-center justify-center gap-3 text-white"
+                className="mx-auto px-12 py-3 rounded-xl font-black text-lg uppercase tracking-widest flex items-center gap-3 text-white"
                 style={{
                   background: 'linear-gradient(90deg, #1d4ed8 0%, #7c3aed 50%, #b91c1c 100%)',
                   boxShadow: '0 0 30px rgba(59,130,246,0.4)',

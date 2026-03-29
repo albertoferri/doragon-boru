@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import TypewriterText from './TypewriterText'
 
 export default function QuizCard({ question, options, onAnswer, answered, correct, selected }) {
   return (
@@ -74,7 +75,9 @@ export default function QuizCard({ question, options, onAnswer, answered, correc
           </motion.div>
         )}
 
-        <p className="text-white font-semibold mt-1">{question.question}</p>
+        <p className="text-white font-semibold mt-1">
+          <TypewriterText text={question.question} speed={35} />
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -99,7 +102,7 @@ export default function QuizCard({ question, options, onAnswer, answered, correc
               style={extraStyle}
               className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${cls}`}
             >
-              {opt}
+              <TypewriterText text={opt} speed={30} delay={i * 90} />
             </button>
           )
         })}

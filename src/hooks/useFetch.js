@@ -5,22 +5,22 @@ export default function useFetch(fetchFn, deps = []) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const execute = useCallback(async () => {
+  // Returns a cancel function so the effect can ignore stale responses
+  const execute = useCallback(() => {
     setLoading(true)
     setError(null)
-    try {
-      const result = await fetchFn()
-      setData(result)
-    } catch (err) {
-      setError(err.message || 'An error occurred')
-    } finally {
-      setLoading(false)
-    }
+    let cancelled = false
+
+    fetchFn()
+      .then(result => { if (!cancelled) setData(result) })
+      .catch(err  => { if (!cancelled) setError(err.message || 'An error occurred') })
+      .finally(()  => { if (!cancelled) setLoading(false) })
+
+    return () => { cancelled = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
-  useEffect(() => {
-    execute()
-  }, [execute])
+  useEffect(() => execute(), [execute])
 
   return { data, loading, error, refetch: execute }
 }

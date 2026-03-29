@@ -106,11 +106,11 @@ function FighterCard({ fighter, index, hp, isWinner, isLoser, fighting, lastEntr
       )}
 
       {/* Character image */}
-      <div style={{ height: '170px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ height: '240px', position: 'relative', overflow: 'hidden', background: 'radial-gradient(ellipse at 50% 110%, rgba(99,102,241,0.08) 0%, transparent 70%)' }}>
         <motion.img
           src={fighter.image}
           alt={fighter.name}
-          className="w-full h-full object-cover object-top"
+          className="w-full h-full object-contain object-bottom"
           animate={fighting ? { scale: [1, 1.05, 1] } : { scale: 1 }}
           transition={fighting ? { repeat: Infinity, duration: 0.85, ease: 'easeInOut' } : { duration: 0.5 }}
           style={{ filter: isLoser ? 'grayscale(0.75) brightness(0.5)' : 'none' }}
@@ -419,7 +419,7 @@ export default function BattleArena({ fighter1, fighter2, onReset }) {
           whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(109,40,217,0.55)' }}
           whileTap={{ scale: 0.97 }}
           onClick={startBattle}
-          className="w-full py-4 rounded-xl font-black text-lg text-white flex items-center justify-center gap-2"
+          className="mx-auto px-14 py-3 rounded-xl font-black text-lg text-white flex items-center gap-2"
           style={{
             background: 'linear-gradient(90deg, #1d4ed8, #7c3aed)',
             boxShadow: '0 0 24px rgba(109,40,217,0.35)',
@@ -465,7 +465,7 @@ export default function BattleArena({ fighter1, fighter2, onReset }) {
               )}
             </div>
 
-            <button onClick={handleReset} className="btn-secondary w-full flex items-center justify-center gap-2">
+            <button onClick={handleReset} className="btn-secondary mx-auto flex items-center gap-2 px-10">
               <FontAwesomeIcon icon={faRotateLeft} /> Nuova Battaglia
             </button>
           </motion.div>

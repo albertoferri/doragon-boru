@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import TypewriterText from '../components/TypewriterText'
 import { motion } from 'framer-motion'
 import { getPlanetById } from '../services/api'
 import useFetch from '../hooks/useFetch'
@@ -14,6 +15,7 @@ import stellaVuota from '../assets/images/stella-vuota.png'
 
 export default function PlanetDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { data: planet, loading, error, refetch } = useFetch(() => getPlanetById(id), [id])
   const { toggleFavPlanet, isFavPlanet } = useFavorites()
   const description = useTranslatedText(planet?.description)
@@ -27,21 +29,22 @@ export default function PlanetDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <Link to="/planets" className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
-        ← Back to Planets
-      </Link>
+      <button onClick={() => navigate(-1)} className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
+        ← Back
+      </button>
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="rounded-xl overflow-hidden border border-neutral-700"
+          className="rounded-xl carta overflow-hidden border border-neutral-700 bg-neutral-800"
+          style={{ marginTop: '82px', height: 'fit-content' }}
         >
           <img
             src={planet.image}
             alt={planet.name}
-            className="w-full h-80 object-cover"
+            className="character-detail-image"
             onError={e => { e.target.src = 'https://via.placeholder.com/600x400/262626/666?text=?' }}
           />
         </motion.div>
@@ -54,7 +57,9 @@ export default function PlanetDetail() {
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-black text-white">{planet.name}</h1>
+              <h1 className="text-3xl font-black text-white">
+                <TypewriterText text={planet.name} speed={45} />
+              </h1>
               <span className={`mt-2 inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full border ${
                 planet.isDestroyed
                   ? 'bg-red-900/40 text-red-400 border-red-800'
@@ -79,7 +84,9 @@ export default function PlanetDetail() {
           {planet.description && (
             <div className="card-base p-4">
               <h3 className="text-neutral-400 text-xs uppercase tracking-wider mb-2">Description</h3>
-              <p className="text-neutral-200 text-sm leading-relaxed">{description}</p>
+              <p className="text-neutral-200 text-sm leading-relaxed">
+                <TypewriterText text={description} speed={8} />
+              </p>
             </div>
           )}
 

@@ -7,6 +7,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import { parseKi } from '../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faXmark, faBolt } from '@fortawesome/free-solid-svg-icons'
+import TypewriterText from '../components/TypewriterText'
 
 const RACES = ['Saiyan', 'Human', 'Namekian', 'Frieza Race', 'Android', 'Majin', 'God', 'Angel', 'Unknown']
 const PAGE_SIZE = 24
@@ -57,7 +58,9 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-black text-white mb-1">Characters</h1>
+        <h1 className="text-4xl font-black text-white mb-1">
+          <TypewriterText text="Characters" speed={55} />
+        </h1>
         <p className="text-neutral-500 text-sm">{allChars.length} fighters in the Dragon Ball Universe</p>
       </motion.div>
 

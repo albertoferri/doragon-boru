@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import { shuffle } from '../utils/helpers'
 import { translateText } from '../utils/translate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import TypewriterText from '../components/TypewriterText'
 import {
   faBrain, faUser, faGlobe, faTrophy, faStar, faDumbbell,
   faRotate, faEyeSlash, faScroll, faArrowLeft,
@@ -176,7 +177,8 @@ export default function QuizMode() {
         className="text-center mb-10"
       >
         <h1 className="text-4xl font-black text-white mb-2 flex items-center justify-center gap-3">
-          <FontAwesomeIcon icon={faBrain} className="text-purple-400" /> Quiz Mode
+          <FontAwesomeIcon icon={faBrain} className="text-purple-400" />
+          <TypewriterText text="Quiz Mode" speed={55} />
         </h1>
         <p className="text-neutral-400">Test your Dragon Ball knowledge</p>
       </motion.div>
@@ -256,6 +258,7 @@ export default function QuizMode() {
             </div>
 
             <QuizCard
+              key={current}
               question={currentQ}
               options={currentQ.options}
               onAnswer={handleAnswer}
