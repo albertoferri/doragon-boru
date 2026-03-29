@@ -33,10 +33,10 @@ export default function CharacterCard({ character }) {
   return (
     <motion.div
       ref={cardRef}
-      layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.25 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

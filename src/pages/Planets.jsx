@@ -71,7 +71,7 @@ export default function Planets() {
 
       <p className="text-neutral-500 text-sm mb-4">{filtered.length} planet{filtered.length !== 1 ? 's' : ''}</p>
 
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence>
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map(planet => (

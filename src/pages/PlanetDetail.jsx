@@ -31,8 +31,9 @@ export default function PlanetDetail() {
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
           className="rounded-xl overflow-hidden border border-neutral-700"
         >
           <img
@@ -44,8 +45,9 @@ export default function PlanetDetail() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.07 }}
           className="space-y-4"
         >
           <div className="flex items-start justify-between gap-3">

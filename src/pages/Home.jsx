@@ -6,7 +6,7 @@ import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import { parseKi } from '../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faGear, faXmark, faBolt } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faXmark, faBolt } from '@fortawesome/free-solid-svg-icons'
 
 const RACES = ['Saiyan', 'Human', 'Namekian', 'Frieza Race', 'Android', 'Majin', 'God', 'Angel', 'Unknown']
 const PAGE_SIZE = 24
@@ -19,7 +19,6 @@ export default function Home() {
   const [race, setRace] = useState('')
   const [sortByKi, setSortByKi] = useState(false)
   const [page, setPage] = useState(1)
-  const [showFilters, setShowFilters] = useState(false)
 
   const load = () => {
     setLoading(true)
@@ -62,33 +61,65 @@ export default function Home() {
         <p className="text-neutral-500 text-sm">{allChars.length} fighters in the Dragon Ball Universe</p>
       </motion.div>
 
-      {/* Search + Filter button */}
-      <div className="flex gap-3 mb-6">
-        <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-sm pointer-events-none">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </span>
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name..."
-            className="w-full bg-neutral-800 border border-neutral-700 rounded-xl pl-9 pr-4 py-2.5 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-blue-500/70 transition-colors"
-          />
-        </div>
+      {/* Search bar */}
+      <div className="relative mb-3">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none">
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </span>
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search fighters..."
+          className="w-full bg-neutral-800 border border-neutral-700 rounded-2xl pl-11 pr-10 py-3.5 text-white placeholder-neutral-500 text-sm focus:outline-none focus:border-blue-500/60 focus:bg-neutral-800/90 transition-all"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
+          >
+            <FontAwesomeIcon icon={faXmark} className="text-xs" />
+          </button>
+        )}
+      </div>
+
+      {/* Inline filter chips — horizontally scrollable */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4" style={{ scrollbarWidth: 'none' }}>
+        {/* Sort chip */}
         <button
-          onClick={() => setShowFilters(true)}
-          className="px-4 py-2.5 rounded-xl border text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap"
+          onClick={() => setSortByKi(v => !v)}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold shrink-0 transition-all duration-200"
           style={{
-            background: hasActiveFilters ? 'rgba(37,99,235,0.2)' : 'rgba(38,38,38,1)',
-            borderColor: hasActiveFilters ? 'rgba(59,130,246,0.6)' : 'rgba(64,64,64,1)',
-            color: hasActiveFilters ? '#93c5fd' : '#a3a3a3',
+            background: sortByKi ? 'rgba(124,58,237,0.2)' : 'rgba(30,30,30,1)',
+            borderColor: sortByKi ? 'rgba(139,92,246,0.6)' : 'rgba(64,64,64,1)',
+            color: sortByKi ? '#c4b5fd' : '#737373',
           }}
         >
-          <FontAwesomeIcon icon={faGear} /> Filters
-          {hasActiveFilters && (
-            <span className="w-2 h-2 rounded-full bg-blue-400 inline-block" />
-          )}
+          <FontAwesomeIcon icon={faBolt} className="text-[11px]" />
+          Sort by KI
         </button>
+
+        {/* Divider */}
+        <div className="w-px h-5 bg-neutral-700 shrink-0" />
+
+        {/* Race chips */}
+        {['All', ...RACES].map(r => {
+          const isAll = r === 'All'
+          const active = isAll ? !race : race === r
+          return (
+            <button
+              key={r}
+              onClick={() => setRace(isAll ? '' : (race === r ? '' : r))}
+              className="px-3.5 py-2 rounded-xl border text-xs font-medium shrink-0 transition-all duration-200"
+              style={{
+                background: active ? 'rgba(37,99,235,0.2)' : 'rgba(30,30,30,1)',
+                borderColor: active ? 'rgba(59,130,246,0.55)' : 'rgba(64,64,64,1)',
+                color: active ? '#93c5fd' : '#737373',
+              }}
+            >
+              {r}
+            </button>
+          )
+        })}
       </div>
 
       {/* Results info */}
@@ -110,7 +141,7 @@ export default function Home() {
       </div>
 
       {/* Grid */}
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence>
         {paginated.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {paginated.map(char => (
@@ -176,102 +207,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* Filter Drawer */}
-      <AnimatePresence>
-        {showFilters && (
-          <>
-            <motion.div
-              key="overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowFilters(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-            />
-            <motion.div
-              key="drawer"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-              className="fixed right-0 top-0 h-full w-72 bg-neutral-900 border-l border-neutral-800 z-50 p-6 overflow-y-auto"
-            >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-white font-bold text-lg">Filters</h3>
-                <button
-                  onClick={() => setShowFilters(false)}
-                  className="w-8 h-8 rounded-lg bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-colors"
-                >
-                  <FontAwesomeIcon icon={faXmark} />
-                </button>
-              </div>
-
-              {/* Race */}
-              <div className="mb-8">
-                <label className="text-neutral-300 font-medium text-sm mb-3 block">Race</label>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setRace('')}
-                    className="px-3 py-1.5 rounded-full text-xs border transition-all"
-                    style={{
-                      background: !race ? '#2563eb' : '#262626',
-                      borderColor: !race ? '#3b82f6' : '#404040',
-                      color: !race ? '#fff' : '#a3a3a3',
-                    }}
-                  >
-                    All
-                  </button>
-                  {RACES.map(r => (
-                    <button
-                      key={r}
-                      onClick={() => setRace(r)}
-                      className="px-3 py-1.5 rounded-full text-xs border transition-all"
-                      style={{
-                        background: race === r ? '#2563eb' : '#262626',
-                        borderColor: race === r ? '#3b82f6' : '#404040',
-                        color: race === r ? '#fff' : '#a3a3a3',
-                      }}
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sort */}
-              <div className="mb-8">
-                <label className="text-neutral-300 font-medium text-sm mb-3 block">Sort by</label>
-                <button
-                  onClick={() => setSortByKi(v => !v)}
-                  className="w-full py-2.5 rounded-xl border text-sm text-left px-4 transition-all flex items-center gap-2"
-                  style={{
-                    background: sortByKi ? 'rgba(124,58,237,0.25)' : '#262626',
-                    borderColor: sortByKi ? '#7c3aed' : '#404040',
-                    color: sortByKi ? '#c4b5fd' : '#a3a3a3',
-                  }}
-                >
-                  <FontAwesomeIcon icon={faBolt} /> Power Level (Ki) ↓
-                </button>
-              </div>
-
-              {/* Reset */}
-              {hasActiveFilters && (
-                <button
-                  onClick={() => { setRace(''); setSortByKi(false) }}
-                  className="w-full py-2.5 rounded-xl border text-sm transition-all flex items-center justify-center gap-2"
-                  style={{
-                    background: 'rgba(127,29,29,0.3)',
-                    borderColor: 'rgba(185,28,28,0.5)',
-                    color: '#fca5a5',
-                  }}
-                >
-                  <FontAwesomeIcon icon={faXmark} /> Clear all filters
-                </button>
-              )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   )
 }

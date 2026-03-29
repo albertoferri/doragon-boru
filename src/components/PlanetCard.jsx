@@ -40,12 +40,11 @@ export default function PlanetCard({ planet }) {
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, y: 8 }}
       whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       className="relative overflow-hidden cursor-pointer group"
