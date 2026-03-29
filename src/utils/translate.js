@@ -1,34 +1,39 @@
 // DeepL translation utility (ES → IT)
-// Dev: calls through Vite proxy (/deepl) to avoid CORS
-// Prod: needs VITE_DEEPL_PROXY_URL pointing to a Cloudflare Worker
-// Cache in localStorage — second visit is always instant
-
-const DEV_URL = '/deepl/v2/translate'
-const PROD_URL = import.meta.env.VITE_DEEPL_PROXY_URL
-
-const DEEPL_URL = import.meta.env.DEV ? DEV_URL : PROD_URL
+//
+// Dev:  calls through Vite proxy (/deepl) — API key sent in Authorization header
+// Prod: calls Cloudflare Worker (VITE_DEEPL_PROXY_URL) — Worker handles auth internally,
+//       API key is never included in the production bundle
+//
+// Results are cached in localStorage — each text is only translated once.
 
 export async function translateText(text, sourceLang = 'ES', targetLang = 'IT') {
   if (!text?.trim()) return text
-  if (!DEEPL_URL) return text
 
-  const key = import.meta.env.VITE_DEEPL_API_KEY
-  if (!key) return text
+  const url = import.meta.env.DEV
+    ? '/deepl/v2/translate'
+    : import.meta.env.VITE_DEEPL_PROXY_URL
+
+  if (!url) return text
 
   const cacheKey = `deepl|${sourceLang}|${targetLang}|${text}`
-
   try {
     const cached = localStorage.getItem(cacheKey)
     if (cached) return cached
   } catch { /* ignore */ }
 
   try {
-    const res = await fetch(DEEPL_URL, {
+    const headers = { 'Content-Type': 'application/json' }
+
+    // In dev, authenticate directly through the Vite proxy
+    if (import.meta.env.DEV) {
+      const key = import.meta.env.VITE_DEEPL_API_KEY
+      if (!key) return text
+      headers['Authorization'] = `DeepL-Auth-Key ${key}`
+    }
+
+    const res = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Authorization': `DeepL-Auth-Key ${key}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({ text: [text], source_lang: sourceLang, target_lang: targetLang }),
     })
 
@@ -42,6 +47,6 @@ export async function translateText(text, sourceLang = 'ES', targetLang = 'IT') 
 
     return result
   } catch {
-    return text // network error: show original
+    return text
   }
 }
