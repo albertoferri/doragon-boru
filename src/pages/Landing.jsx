@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getAllCharacters } from '../services/api'
+import wallImg from '../assets/images/wall1.jpg'
 
 const NAV_ITEMS = [
   { to: '/characters',    label: 'Personaggi',       phrase: 'Saiyan pronti alla battaglia!',  color: '#3b82f6' },
@@ -105,6 +106,17 @@ function OrbitalLink({ char, item, angle, radius }) {
 export default function Landing() {
   const [chars, setChars] = useState([])
 
+  // Disable scroll on mobile
+  useEffect(() => {
+    const isMobile = window.innerWidth < 1024
+    if (isMobile) {
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [])
+
   useEffect(() => {
     getAllCharacters()
       .then(data => {
@@ -172,30 +184,50 @@ export default function Landing() {
           })}
         </div>
 
-        {/* Mobile: title + grid */}
-        <div className="lg:hidden flex flex-col items-center px-4 py-12">
-          <h1 className="text-4xl font-black text-white mb-2 text-center">
-            Dragon Ball <span className="text-blue-400">Universe</span>
-          </h1>
-          <p className="text-neutral-400 text-sm mb-8 text-center">
-            Explore fighters, planets and epic battles
-          </p>
-          <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
-            {NAV_ITEMS.map(item => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="rounded-xl p-4 text-center font-bold text-sm transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: `1px solid ${item.color}44`,
-                  color: item.color,
-                }}
-              >
-                {item.label}
-                <p className="text-xs text-neutral-500 font-normal mt-1">{item.phrase}</p>
-              </Link>
-            ))}
+        {/* Mobile: full-screen background image */}
+        <div
+          className="landing-mobile lg:hidden"
+          style={{ backgroundImage: `url(${wallImg})` }}
+        >
+          <div className="landing-mobile__overlay" />
+          <div className="landing-mobile__content">
+
+            {/* Title */}
+            <motion.div
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="landing-mobile__title"
+            >
+              <h1>Dragon Ball</h1>
+              <h2>Universe</h2>
+              <p>Explore fighters, planets and epic battles</p>
+            </motion.div>
+
+            {/* Nav grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="landing-mobile__grid"
+            >
+              {NAV_ITEMS.map(item => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="landing-mobile__card"
+                  style={{
+                    background: `${item.color}18`,
+                    border: `1px solid ${item.color}55`,
+                    color: item.color,
+                  }}
+                >
+                  {item.label}
+                  <p>{item.phrase}</p>
+                </Link>
+              ))}
+            </motion.div>
+
           </div>
         </div>
       </div>

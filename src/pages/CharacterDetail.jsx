@@ -24,7 +24,7 @@ export default function CharacterDetail() {
   const transformations = character.transformations || []
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <Link to="/" className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
         ← Back to Characters
       </Link>
@@ -33,12 +33,13 @@ export default function CharacterDetail() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="rounded-xl overflow-hidden border border-neutral-700 bg-neutral-800"
+          className="rounded-xl carta overflow-hidden border border-neutral-700 bg-neutral-800"
+          style={{marginTop : '82px', height : 'fit-content'}}
         >
           <img
             src={character.image}
             alt={character.name}
-            className="w-full h-96 object-cover object-top"
+            className="character-detail-image"
             onError={e => { e.target.src = 'https://via.placeholder.com/600x600/262626/666?text=?' }}
           />
         </motion.div>
@@ -116,28 +117,62 @@ export default function CharacterDetail() {
           transition={{ delay: 0.2 }}
         >
           <h2 className="text-xl font-bold text-white mb-4">
-            Transformations <span className="text-neutral-500 font-normal text-base">({transformations.length})</span>
+            Transformations{' '}
+            <span className="text-neutral-500 font-normal text-base">({transformations.length})</span>
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {transformations.map(t => (
-              <div key={t.id} className="card-base overflow-hidden hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-shadow">
-                <div className="h-36 overflow-hidden bg-neutral-900/50">
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {transformations.map((t, i) => (
+              <motion.div
+                key={t.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 * i }}
+                className="group relative rounded-2xl overflow-hidden cursor-default"
+                style={{
+                  background: 'linear-gradient(160deg, #1a1a2e 0%, #0d0d1a 100%)',
+                  border: '1px solid rgba(234,179,8,0.15)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+                  transition: 'border-color 0.3s, box-shadow 0.3s',
+                }}
+                whileHover={{
+                  borderColor: 'rgba(234,179,8,0.5)',
+                  boxShadow: '0 0 24px rgba(234,179,8,0.18), 0 4px 20px rgba(0,0,0,0.5)',
+                }}
+              >
+                {/* Image area — tall enough to show full character */}
+                <div
+                  className="relative flex items-end justify-center overflow-hidden"
+                  style={{ height: '220px', background: 'radial-gradient(ellipse at 50% 110%, rgba(234,179,8,0.07) 0%, transparent 65%)' }}
+                >
                   <img
                     src={t.image}
                     alt={t.name}
-                    className="w-full h-full object-cover object-top"
-                    onError={e => { e.target.src = 'https://via.placeholder.com/200x200/262626/666?text=?' }}
+                    className="h-full w-full object-contain object-bottom"
+                    style={{
+                      filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.7))',
+                      transition: 'transform 0.35s ease, filter 0.35s ease',
+                    }}
+                    onError={e => { e.target.src = 'https://via.placeholder.com/200x200/1a1a2e/666?text=?' }}
+                  />
+                  {/* Bottom gradient so text is readable */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(13,13,26,0.95) 0%, rgba(13,13,26,0.2) 40%, transparent 100%)' }}
                   />
                 </div>
-                <div className="p-3">
-                  <p className="text-white text-sm font-medium truncate">{t.name}</p>
+
+                {/* Info */}
+                <div className="px-3 pb-3 pt-1">
+                  <p className="text-white text-sm font-bold leading-snug line-clamp-2">{t.name}</p>
                   {t.ki && (
-                    <p className="text-yellow-400 text-xs mt-1 flex items-center gap-1">
-                      <FontAwesomeIcon icon={faBolt} className="text-xs" /> {t.ki}
+                    <p className="text-yellow-400 text-xs mt-1 flex items-center gap-1 font-medium">
+                      <FontAwesomeIcon icon={faBolt} className="text-[10px]" />
+                      {t.ki}
                     </p>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>

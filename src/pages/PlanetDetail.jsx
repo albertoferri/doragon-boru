@@ -24,7 +24,7 @@ export default function PlanetDetail() {
   const isFav = isFavPlanet(planet.id)
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <Link to="/planets" className="text-neutral-400 hover:text-white text-sm mb-6 inline-flex items-center gap-1 transition-colors">
         ← Back to Planets
       </Link>

@@ -1,0 +1,117 @@
+// ─── Global mobile overflow fix ────────────────────────────────────────────
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+// ─── Mobile Landing ─────────────────────────────────────────────────────────
+// Background-image is injected via inline style in Landing.jsx (Vite-safe import)
+.landing-mobile {
+  position: fixed;
+  inset: 0;
+  top: 4rem; // offset for navbar height
+  height: calc(100vh - 4rem);
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.65) 55%,
+      rgba(0, 0, 0, 0.92) 100%
+    );
+  }
+
+  &__content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 2.5rem 1.25rem 2rem;
+  }
+
+  &__title {
+    text-align: center;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #a3a3a3;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 24rem;
+  }
+
+  &__card {
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    backdrop-filter: blur(8px);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    text-decoration: none;
+
+    &:active {
+      transform: scale(0.95);
+      opacity: 0.85;
+    }
+
+    p {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: #a3a3a3;
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+// ─── Character Detail — mobile image fix ────────────────────────────────────
+.character-detail-image {
+  width: 100%;
+  height: 350px;
+  object-fit: contain;
+  object-position: top;
+  background-color: #171717;
+
+  @media (min-width: 768px) {
+    height: 24rem; // h-96 equivalent — same as current Tailwind class
+  }
+}
+
+
+@media (max-width: 767px){
+  .carta{
+    margin-top: 0px !important;
+  }
+}

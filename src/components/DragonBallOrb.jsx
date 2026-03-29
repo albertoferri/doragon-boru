@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faChevronRight, faHandFist, faGlobe } from '@fortawesome/free-solid-svg-icons'
@@ -38,13 +38,24 @@ const RULES = [
 export default function DragonBallOrb() {
   const [open, setOpen] = useState(false)
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [open])
+
   return (
     <>
       {/* Floating orb button */}
       <motion.button
         onClick={() => setOpen(true)}
         title="Regolamento battaglie"
-        className="fixed right-5 bottom-20 z-40 focus:outline-none"
+        className="fixed right-5 bottom-36 sm:bottom-20 z-40 focus:outline-none"
         whileHover={{ scale: 1.12 }}
         whileTap={{ scale: 0.93 }}
         style={{ filter: 'drop-shadow(0 0 14px rgba(255,140,0,0.6))' }}
@@ -78,7 +89,7 @@ export default function DragonBallOrb() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 12 }}
             transition={{ type: 'spring', damping: 24, stiffness: 320 }}
-            className="fixed z-[60] inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto"
+            className="fixed z-[60] inset-x-4 -translate-y-1/2 max-w-lg mx-auto"
           >
             <div style={{
               background: 'linear-gradient(145deg, #1c1c2e 0%, #16213e 60%, #0d1b2a 100%)',

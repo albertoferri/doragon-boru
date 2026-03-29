@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { HashRouter as BrowserRouter } from 'react-router-dom'
 import App from './App'
 import './index.css'
+import './styles/main.scss'
 import { FavoritesProvider } from './context/FavoritesContext'
 import { GlobalProvider } from './context/GlobalContext'
 

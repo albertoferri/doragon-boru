@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { parseKi, hiddenPower } from '../utils/helpers'
+import { getPlanetById } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrophy, faSkull, faCircleCheck, faBolt, faRotateLeft, faGlobe, faFire, faScaleBalanced } from '@fortawesome/free-solid-svg-icons'
+import { faTrophy, faSkull, faCircleCheck, faBolt, faRotateLeft, faGlobe, faFire, faScaleBalanced, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 const fmt = (n) => {
   if (n >= 1e15) return (n / 1e15).toFixed(1) + 'Q'
@@ -53,33 +54,36 @@ function KiCompare({ adj1, adj2, name1, name2 }) {
 
 function PlanetBattleCard({ planet, index, result }) {
   const isWinner = result?.winner?.id === planet.id
-  const isLoser = result && result.winner && result.winner.id !== planet.id
-  const chars = result ? (index === 0 ? result.chars1 : result.chars2) : []
-  const adj = result ? (index === 0 ? result.adjusted1 : result.adjusted2) : 0
+  const isLoser  = result && result.winner && result.winner.id !== planet.id
+  const chars    = result ? (index === 0 ? result.chars1 : result.chars2) : []
+  const adj      = result ? (index === 0 ? result.adjusted1 : result.adjusted2) : 0
+  const isBlue   = index === 0
+  const color    = isBlue ? '#a78bfa' : '#f87171'
+  const glow     = isBlue ? 'rgba(167,139,250,0.5)' : 'rgba(248,113,113,0.5)'
 
   return (
     <motion.div
       initial={{ opacity: 0, x: index === 0 ? -30 : 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4 }}
-      className="relative rounded-2xl overflow-hidden"
+      className="relative rounded-2xl flex flex-col overflow-hidden"
       style={{
         background: isWinner
           ? 'linear-gradient(160deg, #1a1a2e 0%, #0d0d20 100%)'
           : isLoser
           ? 'linear-gradient(160deg, #2e1a1a 0%, #1a0d0d 100%)'
-          : 'linear-gradient(160deg, #0d0d1a 0%, #0a0a14 100%)',
+          : `linear-gradient(160deg, ${isBlue ? '#08060f' : '#0f0608'} 0%, #050508 100%)`,
         border: isWinner
-          ? '1px solid rgba(167,139,250,0.5)'
+          ? '1px solid rgba(167,139,250,0.55)'
           : isLoser
           ? '1px solid rgba(239,68,68,0.25)'
-          : `1px solid ${index === 0 ? 'rgba(139,92,246,0.3)' : 'rgba(239,68,68,0.3)'}`,
-        boxShadow: isWinner ? '0 0 24px rgba(139,92,246,0.2)' : 'none',
+          : `1px solid ${isBlue ? 'rgba(139,92,246,0.35)' : 'rgba(239,68,68,0.35)'}`,
+        boxShadow: isWinner ? `0 0 28px ${glow}` : 'none',
       }}
     >
       {isWinner && (
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="absolute top-2 left-1/2 -translate-x-1/2 text-2xl z-10 text-yellow-400"
         >
@@ -88,65 +92,116 @@ function PlanetBattleCard({ planet, index, result }) {
       )}
 
       {/* Planet image */}
-      <div className="relative h-32 overflow-hidden">
+      <div className="relative overflow-hidden" style={{ height: '130px' }}>
         <img
           src={planet.image}
           alt={planet.name}
           className="w-full h-full object-cover"
-          style={{ filter: isLoser ? 'grayscale(0.7) brightness(0.6)' : 'none' }}
+          style={{ filter: isLoser ? 'grayscale(0.75) brightness(0.5)' : 'none' }}
           onError={e => { e.target.src = 'https://via.placeholder.com/400x200/0d0d1a/444?text=?' }}
         />
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(10,10,20,0.9) 0%, rgba(10,10,20,0.2) 60%, transparent 100%)',
-        }} />
-        {/* Destroyed / Alive badge */}
-        <div className="absolute top-2 left-2">
-          <span className={`text-xs px-2 py-0.5 rounded-full font-semibold backdrop-blur-sm flex items-center gap-1 ${
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(5,5,8,0.97) 0%, rgba(5,5,8,0.1) 55%, transparent 100%)' }} />
+
+        {/* Status badge */}
+        <div style={{ position: 'absolute', top: 8, left: 8 }}>
+          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black flex items-center gap-1 ${
             planet.isDestroyed
-              ? 'bg-red-900/70 text-red-400 border border-red-800/50'
-              : 'bg-green-900/70 text-green-400 border border-green-800/50'
+              ? 'bg-red-900/80 text-red-400 border border-red-800/60'
+              : 'bg-green-900/80 text-green-400 border border-green-800/60'
           }`}>
-            <FontAwesomeIcon icon={planet.isDestroyed ? faSkull : faCircleCheck} className="text-xs" />
-            {planet.isDestroyed ? ' Distrutto' : ' Vivo'}
+            <FontAwesomeIcon icon={planet.isDestroyed ? faSkull : faCircleCheck} />
+            {planet.isDestroyed ? 'DIST.' : 'VIVO'}
           </span>
+        </div>
+
+        {/* P1/P2 badge */}
+        <div style={{ position: 'absolute', top: 8, [isBlue ? 'right' : 'left']: 8 }}>
+          <span className="text-[9px] font-black px-1.5 py-0.5 rounded" style={{ background: color, color: '#fff' }}>
+            {isBlue ? 'P1' : 'P2'}
+          </span>
+        </div>
+
+        {/* Name on image */}
+        <div style={{ position: 'absolute', bottom: 6, left: 0, right: 0, padding: '0 8px', textAlign: 'center' }}>
+          <p className="font-black text-white text-xs truncate" style={{ textShadow: '0 1px 6px rgba(0,0,0,1)' }}>
+            {planet.name}
+          </p>
         </div>
       </div>
 
-      <div className="p-3 text-center">
-        <h3 className="font-black text-white text-sm mb-1">{planet.name}</h3>
+      {/* Stat blocks */}
+      <div className="p-2 space-y-1.5">
+
+        {/* Destroyed penalty notice */}
         {planet.isDestroyed && (
-          <p className="text-xs text-red-400/70 mb-1">−40% penalità potere</p>
+          <div className="rounded-xl px-2.5 py-1.5 text-center"
+            style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.28)' }}>
+            <p className="text-[9px] font-black uppercase tracking-wider text-red-400">
+              <FontAwesomeIcon icon={faSkull} className="mr-1" />−40% penalità potere
+            </p>
+          </div>
         )}
 
-        {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 space-y-1">
-            <p className="text-xs text-neutral-500">
-              {chars.length} {chars.length === 1 ? 'personaggio' : 'personaggi'}
+        {/* Warriors + Power row */}
+        <div className="grid grid-cols-2 gap-1.5">
+
+          {/* Warriors block */}
+          <div className="rounded-xl px-2 py-2" style={{ background: 'rgba(0,0,0,0.6)', border: `1px solid ${color}33` }}>
+            <p className="text-[9px] font-black uppercase tracking-[0.15em] mb-1" style={{ color: color + 'aa' }}>
+              <FontAwesomeIcon icon={faUsers} className="mr-0.5" />Guerrieri
             </p>
-            <p className="text-sm font-bold font-mono flex items-center justify-center gap-1.5" style={{ color: index === 0 ? '#a78bfa' : '#f87171' }}>
-              <FontAwesomeIcon icon={faBolt} className="text-xs" /> {fmt(adj)}
+            <p className="text-base font-black leading-tight" style={{ color }}>
+              {result ? chars.length : '—'}
             </p>
-          </motion.div>
-        )}
+          </div>
+
+          {/* Power block */}
+          <div className="rounded-xl px-2 py-2" style={{
+            background: result && isWinner ? `${glow.replace('0.5', '0.1')}` : 'rgba(0,0,0,0.6)',
+            border: result && isWinner ? `1px solid ${color}55` : '1px solid rgba(249,115,22,0.25)',
+          }}>
+            <p className="text-[9px] font-black uppercase tracking-[0.15em] mb-1" style={{ color: 'rgba(249,115,22,0.7)' }}>
+              <FontAwesomeIcon icon={faBolt} className="mr-0.5" />Potere
+            </p>
+            <p className="text-sm font-black font-mono leading-tight truncate"
+              style={{ color: result ? (isWinner ? '#fbbf24' : color) : 'rgba(255,255,255,0.15)' }}>
+              {result ? fmt(adj) : '???'}
+            </p>
+          </div>
+        </div>
+
+        {/* Status chip row */}
+        <div className="rounded-xl px-2.5 py-1.5 flex items-center justify-between"
+          style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <p className="text-[9px] font-black uppercase tracking-[0.15em] text-neutral-500">Stato</p>
+          <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full flex items-center gap-1 ${
+            planet.isDestroyed
+              ? 'bg-red-900/60 text-red-400 border border-red-800/50'
+              : 'bg-green-900/60 text-green-400 border border-green-800/50'
+          }`}>
+            <FontAwesomeIcon icon={planet.isDestroyed ? faSkull : faCircleCheck} />
+            {planet.isDestroyed ? 'Pianeta Distrutto' : 'Pianeta Esistente'}
+          </span>
+        </div>
       </div>
     </motion.div>
   )
 }
 
-export default function PlanetBattle({ planet1, planet2, characters, onReset }) {
+export default function PlanetBattle({ planet1, planet2, onReset }) {
   const [result, setResult] = useState(null)
   const [calculating, setCalculating] = useState(false)
 
-  const calculate = () => {
+  const calculate = async () => {
     setCalculating(true)
-    setTimeout(() => {
-      const chars1 = characters.filter(c =>
-        c.originPlanet?.id === planet1.id || c.originPlanet?.name === planet1.name
-      )
-      const chars2 = characters.filter(c =>
-        c.originPlanet?.id === planet2.id || c.originPlanet?.name === planet2.name
-      )
+    try {
+      const [p1Detail, p2Detail] = await Promise.all([
+        getPlanetById(planet1.id),
+        getPlanetById(planet2.id),
+      ])
+
+      const chars1 = p1Detail.characters || []
+      const chars2 = p2Detail.characters || []
 
       const totalKi1 = chars1.reduce((s, c) => s + getCharPower(c), 0)
       const totalKi2 = chars2.reduce((s, c) => s + getCharPower(c), 0)
@@ -156,15 +211,18 @@ export default function PlanetBattle({ planet1, planet2, characters, onReset }) 
 
       const winner = adjusted1 > adjusted2 ? planet1 : adjusted2 > adjusted1 ? planet2 : null
       setResult({ winner, totalKi1, totalKi2, adjusted1, adjusted2, chars1, chars2 })
+    } finally {
       setCalculating(false)
-    }, 800)
+    }
   }
 
   return (
     <div className="space-y-4">
+
       {/* Planet cards with VS */}
-      <div className="relative grid grid-cols-2 gap-4">
+      <div className="relative grid grid-cols-2 gap-3">
         <PlanetBattleCard planet={planet1} index={0} result={result} />
+
         <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center justify-center z-10 pointer-events-none">
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm"
@@ -178,6 +236,7 @@ export default function PlanetBattle({ planet1, planet2, characters, onReset }) 
             VS
           </div>
         </div>
+
         <PlanetBattleCard planet={planet2} index={1} result={result} />
       </div>
 
@@ -188,7 +247,7 @@ export default function PlanetBattle({ planet1, planet2, characters, onReset }) 
         </motion.div>
       )}
 
-      {/* Action button / result */}
+      {/* Action button */}
       {!result ? (
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -198,9 +257,9 @@ export default function PlanetBattle({ planet1, planet2, characters, onReset }) 
           className="w-full py-4 rounded-xl font-black text-lg text-white flex items-center justify-center gap-2"
           style={{
             background: calculating
-              ? 'linear-gradient(90deg, #6b21a8, #9f1239)'
+              ? 'linear-gradient(90deg, #4c1d95, #7f1d1d)'
               : 'linear-gradient(90deg, #7c3aed, #b91c1c)',
-            boxShadow: '0 0 24px rgba(139,92,246,0.3)',
+            boxShadow: '0 0 28px rgba(139,92,246,0.35)',
           }}
         >
           {calculating ? (
@@ -231,10 +290,10 @@ export default function PlanetBattle({ planet1, planet2, characters, onReset }) 
                   ? 'linear-gradient(135deg, #1a1a2e 0%, #0d0d20 100%)'
                   : 'linear-gradient(135deg, #1c1a0d 0%, #141209 100%)',
                 border: result.winner
-                  ? '1px solid rgba(167,139,250,0.4)'
+                  ? '1px solid rgba(167,139,250,0.45)'
                   : '1px solid rgba(234,179,8,0.35)',
                 boxShadow: result.winner
-                  ? '0 0 30px rgba(139,92,246,0.15)'
+                  ? '0 0 32px rgba(139,92,246,0.18)'
                   : '0 0 20px rgba(234,179,8,0.1)',
               }}
             >
