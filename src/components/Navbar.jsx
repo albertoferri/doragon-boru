@@ -18,8 +18,11 @@ const links = [
 export default function Navbar() {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const isHome = location.pathname === '/'
 
   const handleLinkClick = () => setMobileOpen(false)
+
+  const desktopLinks = isHome ? links.filter(l => l.to === '/favorites') : links
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-neutral-900/95 backdrop-blur-sm border-b border-neutral-800">
@@ -32,8 +35,8 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-0.5">
-          {links.map(({ to, label, icon }) => {
+        <div className="hidden md:flex items-center gap-1">
+          {desktopLinks.map(({ to, label, icon }) => {
             const isActive = location.pathname === to
             return (
               <Link
