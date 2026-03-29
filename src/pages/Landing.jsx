@@ -1,36 +1,38 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { EffectCards } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/effect-cards'
 import { getAllCharacters } from '../services/api'
-import wallImg from '../assets/images/wall1.jpg'
+
+import wallImg    from '../assets/images/wall1.jpg'
+import imgChars   from '../assets/images/gokuchar.jpg'
+import imgPlanets from '../assets/images/kaiplanet.jpg'
+import imgBattle  from '../assets/images/vegetabat.jpg'
+import imgPlanetB from '../assets/images/planetibatt.jpg'
+import imgQuiz    from '../assets/images/quiz.jpg'
 
 const NAV_ITEMS = [
-  { to: '/characters',    label: 'Personaggi',       phrase: 'Saiyan pronti alla battaglia!',  color: '#3b82f6' },
-  { to: '/planets',       label: 'Pianeti',          phrase: 'Esplora nuovi mondi!',            color: '#10b981' },
-  { to: '/battle',        label: 'Battaglia',        phrase: 'Combatti senza pietà!',           color: '#ef4444' },
-  { to: '/planet-battle', label: 'Battaglia Pianeti', phrase: 'Distruggi interi pianeti!',      color: '#8b5cf6' },
-  { to: '/favorites',     label: 'Preferiti',        phrase: 'I tuoi guerrieri preferiti!',     color: '#f59e0b' },
+  { to: '/characters',    label: 'Personaggi',        phrase: 'Saiyan pronti alla battaglia!',  color: '#3b82f6', img: imgChars   },
+  { to: '/planets',       label: 'Pianeti',            phrase: 'Esplora nuovi mondi!',            color: '#10b981', img: imgPlanets },
+  { to: '/battle',        label: 'Battaglia',          phrase: 'Combatti senza pietà!',           color: '#ef4444', img: imgBattle  },
+  { to: '/planet-battle', label: 'Battaglia Pianeti',  phrase: 'Distruggi interi pianeti!',       color: '#8b5cf6', img: imgPlanetB },
+  { to: '/quiz',          label: 'Quiz',               phrase: 'Metti alla prova le tue conoscenze!', color: '#f59e0b', img: imgQuiz },
 ]
 
 function OrbitalLink({ char, item, angle, radius }) {
   const [hovered, setHovered] = useState(false)
 
-  // Position derived from angle so it's clean — no external style prop needed
   const x = Math.cos(angle) * radius
   const y = Math.sin(angle) * radius
 
   return (
     <motion.div
       className="absolute"
-      style={{
-        left: '50%',
-        top: '50%',
-        zIndex: 5,
-      }}
-      animate={{
-        x: x - 44,  // -44 = half of 88px image width to center it
-        y: y - 55,  // -55 = half of 110px image height
-      }}
+      style={{ left: '50%', top: '50%', zIndex: 5 }}
+      animate={{ x: x - 44, y: y - 55 }}
       transition={{ type: 'spring', stiffness: 120, damping: 18 }}
     >
       <Link
@@ -40,7 +42,6 @@ function OrbitalLink({ char, item, angle, radius }) {
         className="block relative"
         style={{ width: 88 }}
       >
-        {/* Character image */}
         <motion.img
           src={char.image}
           alt={char.name}
@@ -63,8 +64,6 @@ function OrbitalLink({ char, item, angle, radius }) {
           className="h-[110px] w-auto object-contain mx-auto block"
           onError={e => { e.target.src = 'https://via.placeholder.com/80/262626/666?text=?' }}
         />
-
-        {/* Nav label */}
         <motion.div
           animate={{ opacity: hovered ? 1 : 0.5, y: hovered ? 0 : 2 }}
           transition={{ duration: 0.2 }}
@@ -73,29 +72,15 @@ function OrbitalLink({ char, item, angle, radius }) {
         >
           {item.label}
         </motion.div>
-
-        {/* Speech balloon */}
         <motion.div
           animate={{ opacity: hovered ? 1 : 0, y: hovered ? -4 : 0 }}
           transition={{ duration: 0.2 }}
           className="absolute pointer-events-none"
-          style={{
-            bottom: '120%',
-            right: '-40%',
-            transform: 'translateX(-50%)',
-            whiteSpace: 'nowrap',
-          }}
+          style={{ bottom: '120%', right: '-40%', transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}
         >
-          <div
-            className="text-black text-xs px-3 py-2 rounded-xl shadow-xl relative font-semibold"
-            style={{ background: 'white' }}
-          >
+          <div className="text-black text-xs px-3 py-2 rounded-xl shadow-xl relative font-semibold" style={{ background: 'white' }}>
             {item.phrase}
-            {/* Arrow */}
-            <div
-              className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45"
-              style={{ bottom: -5 }}
-            />
+            <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45" style={{ bottom: -5 }} />
           </div>
         </motion.div>
       </Link>
@@ -109,12 +94,8 @@ export default function Landing() {
   // Disable scroll on mobile
   useEffect(() => {
     const isMobile = window.innerWidth < 1024
-    if (isMobile) {
-      document.body.style.overflow = 'hidden'
-    }
-    return () => {
-      document.body.style.overflow = 'auto'
-    }
+    if (isMobile) document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = 'auto' }
   }, [])
 
   useEffect(() => {
@@ -130,28 +111,18 @@ export default function Landing() {
   return (
     <div className="relative overflow-hidden" style={{ minHeight: 'calc(100vh - 4rem)' }}>
 
-      {/* Background orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Background orbs — desktop only */}
+      <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
         <div className="bg-orb" style={{ width: 500, height: 500, background: '#3b82f6', top: '20%', left: '20%' }} />
         <div className="bg-orb" style={{ width: 400, height: 400, background: '#8b5cf6', bottom: '20%', right: '20%' }} />
         <div className="bg-orb" style={{ width: 300, height: 300, background: '#06b6d4', top: '60%', left: '10%' }} />
       </div>
 
-      {/* Content — centered on page */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
 
-        {/* Orbital ring — desktop */}
-        <div
-          className="hidden lg:block relative"
-          style={{ width: 800, height: 800 }}
-        >
-          {/* Dashed orbit circle */}
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{ border: '1px dashed rgba(255,255,255,0.08)' }}
-          />
-
-          {/* Title at center of ring */}
+        {/* ── Desktop: orbital ring ── */}
+        <div className="hidden lg:block relative" style={{ width: 800, height: 800 }}>
+          <div className="absolute inset-0 rounded-full pointer-events-none" style={{ border: '1px dashed rgba(255,255,255,0.08)' }} />
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -159,36 +130,21 @@ export default function Landing() {
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none z-10 px-8"
           >
             <h1 className="text-4xl xl:text-5xl font-black text-white mb-2 leading-tight">
-              Doragon{' '}
-              <span className="text-blue-400">Boru</span>
+              Doragon <span className="text-blue-400">Boru</span>
             </h1>
-            <p className="text-neutral-400 text-sm xl:text-base">
-              Explore fighters, planets and epic battles
-            </p>
+            <p className="text-neutral-400 text-sm xl:text-base">Explore fighters, planets and epic battles</p>
           </motion.div>
-
-          {/* Characters (remain absolute inside this container) */}
           {chars.slice(0, NAV_ITEMS.length).map((char, i) => {
             const total = NAV_ITEMS.length
             const angle = (i / total) * Math.PI * 2 - Math.PI / 2
-            const radius = 300
             return (
-              <OrbitalLink
-                key={char.id}
-                char={char}
-                item={NAV_ITEMS[i]}
-                angle={angle}
-                radius={radius}
-              />
+              <OrbitalLink key={char.id} char={char} item={NAV_ITEMS[i]} angle={angle} radius={300} />
             )
           })}
         </div>
 
-        {/* Mobile: full-screen background image */}
-        <div
-          className="landing-mobile lg:hidden"
-          style={{ backgroundImage: `url(${wallImg})` }}
-        >
+        {/* ── Mobile: fullscreen bg + Swiper cards ── */}
+        <div className="landing-mobile lg:hidden" style={{ backgroundImage: `url(${wallImg})` }}>
           <div className="landing-mobile__overlay" />
           <div className="landing-mobile__content">
 
@@ -196,40 +152,46 @@ export default function Landing() {
             <motion.div
               initial={{ opacity: 0, y: -16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.45 }}
               className="landing-mobile__title"
             >
               <h1>Dragon Ball</h1>
               <h2>Universe</h2>
-              <p>Explore fighters, planets and epic battles</p>
+              <p>Swipe per esplorare</p>
             </motion.div>
 
-            {/* Nav grid */}
+            {/* Swiper */}
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="landing-mobile__grid"
+              transition={{ duration: 0.5, delay: 0.18 }}
+              className="landing-mobile__swiper-wrap"
             >
-              {NAV_ITEMS.map(item => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="landing-mobile__card"
-                  style={{
-                    background: `${item.color}18`,
-                    border: `1px solid ${item.color}55`,
-                    color: item.color,
-                  }}
-                >
-                  {item.label}
-                  <p>{item.phrase}</p>
-                </Link>
-              ))}
+              <Swiper
+                effect="cards"
+                grabCursor
+                modules={[EffectCards]}
+                className="landing-swiper"
+              >
+                {NAV_ITEMS.map(item => (
+                  <SwiperSlide key={item.to}>
+                    <Link to={item.to} className="block w-full h-full">
+                      <img src={item.img} alt={item.label} />
+                      <div className="slide-overlay" />
+                      <div className="slide-info">
+                        <span className="slide-accent" style={{ background: item.color }} />
+                        <p className="slide-label">{item.label}</p>
+                        <p className="slide-phrase">{item.phrase}</p>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             </motion.div>
 
           </div>
         </div>
+
       </div>
     </div>
   )
