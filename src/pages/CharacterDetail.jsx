@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import { useFavorites } from '../context/FavoritesContext'
 import { getRaceBadgeStyle } from '../utils/helpers'
+import useTranslatedText from '../hooks/useTranslatedText'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt, faSun, faGlobe, faFlag } from '@fortawesome/free-solid-svg-icons'
 import stellaPiena from '../assets/images/stella-piena.png'
@@ -15,6 +16,7 @@ export default function CharacterDetail() {
   const { id } = useParams()
   const { data: character, loading, error, refetch } = useFetch(() => getCharacterById(id), [id])
   const { toggleFavCharacter, isFavCharacter } = useFavorites()
+  const description = useTranslatedText(character?.description)
 
   if (loading) return <Loader text="Loading fighter data..." />
   if (error) return <ErrorMessage message={error} onRetry={refetch} />
@@ -106,7 +108,7 @@ export default function CharacterDetail() {
           {character.description && (
             <div className="card-base p-4">
               <h3 className="text-neutral-400 text-xs uppercase tracking-wider mb-2">Description</h3>
-              <p className="text-neutral-200 text-sm leading-relaxed">{character.description}</p>
+              <p className="text-neutral-200 text-sm leading-relaxed">{description}</p>
             </div>
           )}
         </motion.div>

@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 import CharacterCard from '../components/CharacterCard'
 import { useFavorites } from '../context/FavoritesContext'
+import useTranslatedText from '../hooks/useTranslatedText'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSkull, faCircleCheck, faGhost } from '@fortawesome/free-solid-svg-icons'
 import stellaPiena from '../assets/images/stella-piena.png'
@@ -15,6 +16,7 @@ export default function PlanetDetail() {
   const { id } = useParams()
   const { data: planet, loading, error, refetch } = useFetch(() => getPlanetById(id), [id])
   const { toggleFavPlanet, isFavPlanet } = useFavorites()
+  const description = useTranslatedText(planet?.description)
 
   if (loading) return <Loader text="Loading planet data..." />
   if (error) return <ErrorMessage message={error} onRetry={refetch} />
@@ -77,7 +79,7 @@ export default function PlanetDetail() {
           {planet.description && (
             <div className="card-base p-4">
               <h3 className="text-neutral-400 text-xs uppercase tracking-wider mb-2">Description</h3>
-              <p className="text-neutral-200 text-sm leading-relaxed">{planet.description}</p>
+              <p className="text-neutral-200 text-sm leading-relaxed">{description}</p>
             </div>
           )}
 
