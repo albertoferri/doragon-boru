@@ -67,7 +67,7 @@ function OrbitalLink({ char, item, angle, radius }) {
                   y: { repeat: Infinity, duration: 2.5 + (angle * 0.3), ease: 'easeInOut' },
                 }
           }
-          className="h-[110px] w-auto object-contain mx-auto block"
+          className="h-[200px] w-auto object-contain mx-auto block"
           onError={e => { e.target.src = 'https://via.placeholder.com/80/262626/666?text=?' }}
         />
         <motion.div

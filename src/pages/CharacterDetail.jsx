@@ -22,7 +22,7 @@ export default function CharacterDetail() {
 
   if (loading) return <Loader text="Loading fighter data..." />
   if (error) return <ErrorMessage message={error} onRetry={refetch} />
-  if (!character) return null
+  if (!character) return <ErrorMessage message="Character not found" onRetry={() => navigate(-1)} />
 
   const isFav = isFavCharacter(character.id)
   const transformations = character.transformations || []
@@ -35,7 +35,7 @@ export default function CharacterDetail() {
 
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 1, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           className="rounded-xl carta overflow-hidden border border-neutral-700 bg-neutral-800"
@@ -50,7 +50,7 @@ export default function CharacterDetail() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 1, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.07 }}
           className="space-y-4"
@@ -135,7 +135,7 @@ export default function CharacterDetail() {
             {transformations.map((t, i) => (
               <motion.div
                 key={t.id}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 1, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 * i }}
                 className="group relative rounded-2xl overflow-hidden cursor-default"

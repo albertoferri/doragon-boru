@@ -9,6 +9,7 @@ export default function useFetch(fetchFn, deps = []) {
   const execute = useCallback(() => {
     setLoading(true)
     setError(null)
+    setData(null)
     let cancelled = false
 
     fetchFn()

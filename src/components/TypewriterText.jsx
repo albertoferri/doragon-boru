@@ -26,22 +26,26 @@ export default function TypewriterText({ text, segments, speed = 45, delay = 0, 
 
   useEffect(() => {
     setCount(0)
+    if (flat.length === 0) return
     let i = 0
+    let iv = null
     const t0 = setTimeout(() => {
-      const iv = setInterval(() => {
+      iv = setInterval(() => {
         i += 1
         setCount(i)
         if (i >= flat.length) clearInterval(iv)
       }, speed)
-      return () => clearInterval(iv)
     }, delay)
-    return () => clearTimeout(t0)
+    return () => {
+      clearTimeout(t0)
+      if (iv) clearInterval(iv)
+    }
   }, [flat, speed, delay])
 
   // Group consecutive same-class chars into chunks to minimise DOM nodes
   const chunks = []
   let buf = '', bufCls = null
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count && i < flat.length; i++) {
     const { c, cls } = flat[i]
     if (cls === bufCls) {
       buf += c

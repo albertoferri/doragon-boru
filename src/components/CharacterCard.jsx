@@ -105,7 +105,7 @@ export default function CharacterCard({ character }) {
             {character.ki && (
               <span className="text-xs text-yellow-400 font-mono flex items-center gap-1 shrink-0">
                 <FontAwesomeIcon icon={faBolt} className="text-xs" />
-                {character.ki.length > 10 ? character.ki.slice(0, 10) + '…' : character.ki}
+                {String(character.ki).length > 10 ? String(character.ki).slice(0, 10) + '…' : String(character.ki)}
               </span>
             )}
           </div>
